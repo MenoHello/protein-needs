@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>MenoHello Protein Calculator</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
+  body {
+    background-color: #ffe9e5;
+    font-family: 'Poppins', sans-serif;
+    color: #333;
+    margin: 2rem;
+  }
+  .calculator-container {
+    max-width: 460px;
+    background: white;
+    padding: 2rem;
+    border-radius: 16px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    margin: auto;
+  }
+  h2 {
+    color: #ffa798;
+    margin-bottom: 1.5rem;
+    text-align: center;
+  }
+  label {
+    display: block;
+    margin: 1rem 0 0.5rem;
+    font-weight: 600;
+  }
+  input[type="number"], select {
+    width: 100%;
+    padding: 0.5rem;
+    font-size: 1rem;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    opacity: 0.4;
+    transition: opacity 0.3s ease;
+  }
+  input[type="number"]:focus, select:focus, input[type="number"].used, select.used {
+    opacity: 1;
+    border-color: #ffa798;
+    outline: none;
+  }
+  .height-inputs {
+    display: flex;
+    gap: 1rem;
+  }
+  .height-inputs input {
+    flex: 1;
+  }
+  button {
+    margin-top: 1.8rem;
+    background-color: #ffa798;
+    color: white;
+    font-weight: 700;
+    padding: 0.7rem;
+    width: 100%;
+    border: none;
+    border-radius: 12px;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  button:hover {
+    background-color: #ffd2cb;
+    color: #333;
+  }
+  .result {
+    margin-top: 2rem;
+    padding: 1.4rem;
+    background-color: #ffe9e5;
+    border-radius: 12px;
+    border: 1.5px solid #ffa798;
+    font-size: 1.1rem;
+    line-height: 1.5;
+  }
+  .tooltip {
+    border-bottom: 1px dotted #ffa798;
+    cursor: help;
+    color: #d65a3c;
+    font-weight: 700;
+  }
+  .example-note {
+    margin-top: 0.8rem;
+    font-style: italic;
+    color: #a63e24;
+  }
+</style>
+</head>
+<body>
+  <div class="calculator-container" role="region" aria-labelledby="calc-title">
+    <h2 id="calc-title">MenoHello Protein Calculator</h2>
+    <form id="proteinForm" aria-describedby="form-instructions">
+      <p id="form-instructions">Enter your details below to get your personalized protein needs.</p>
+      
+      <label for="age">Age (years)</label>
+      <input type="number" id="age" name="age" min="35" max="80" placeholder="e.g., 52" required />
+
+      <label>Height</label>
+      <div class="height-inputs">
+        <input type="number" id="heightFeet" name="heightFeet" min="3" max="7" placeholder="Feet" required />
+        <input type="number" id="heightInches" name="heightInches" min="0" max="11" placeholder="Inches" required />
+      </div>
+
+      <label for="weight">Weight (lbs)</label>
+      <input type="number" id="weight" name="weight" min="80" max="400" placeholder="e.g., 150" required />
+
+      <label for="bodyFat">Body Fat % (optional)</label>
+      <input type="number" id="bodyFat" name="bodyFat" min="5" max="60" step="0.1" placeholder="e.g., 30" />
+
+      <label for="activity">Activity Level</label>
+      <select id="activity" name="activity" required>
+        <option value="" disabled selected>Select activity level</option>
+        <option value="1.0">Sedentary (little or no exercise)</option>
+        <option value="1.2">Light (1–3 days light exercise/week)</option>
+        <option value="1.5">Moderate (3–5 days moderate exercise/week)</option>
+        <option value="1.75">Active (daily intense workouts/endurance)</option>
+      </select>
+
+      <label for="proteinGoal">Set Protein Goal (% of total calories)</label>
+      <select id="proteinGoal" name="proteinGoal" required>
+        <option value="" disabled selected>Select protein goal</option>
+        <option value="0.10">10%</option>
+        <option value="0.15">15%</option>
+        <option value="0.20">20%</option>
+        <option value="0.25">25%</option>
+        <option value="0.30">30%</option>
+        <option value="0.35">35%</option>
+      </select>
+
+      <button type="submit">Calculate Protein Needs</button>
+    </form>
+
+    <div id="result" class="result" aria-live="polite" style="display:none;"></div>
+  </div>
+
+<script>
+  // Fade inputs in when user interacts
+  document.querySelectorAll('input, select').forEach(el => {
+    el.addEventListener('input', () => el.classList.add('used'));
+    el.addEventListener('change', () => el.classList.add('used'));
+  });
+
+  // Protein Calculator Logic
+  document.getElementById('proteinForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    // Gather inputs
+    const age = parseInt(document.getElementById('age').value);
+    const heightFeet = parseInt(document.getElementById('heightFeet').value);
+    const heightInches = parseInt(document.getElementById('heightInches').value);
+    const weightLbs = parseFloat(document.getElementById('weight').value);
+    let bodyFatPercent = parseFloat(document.getElementById('bodyFat').value);
+    const activityFactor = parseFloat(document.getElementById('activity').value);
+    const proteinGoalPercent = parseFloat(document.getElementById('proteinGoal').value);
+
+    // Convert height to cm
+    const heightCm = ((heightFeet * 12) + heightInches) * 2.54;
+
+    // Convert weight to kg
+    const weightKg = weightLbs / 2.205;
+
+    // Calculate BMI = kg / (m^2)
+    const heightM = heightCm / 100;
+    const bmi = weightKg / (heightM * heightM);
+
+    // If body fat not entered or invalid, estimate from BMI and age using Deurenberg formula
+    if (!bodyFatPercent || bodyFatPercent < 5 || bodyFatPercent > 60) {
+      // Body fat % estimation for women: 1.20*BMI + 0.23*age - 5.4
+      bodyFatPercent = 1.20 * bmi + 0.23 * age - 5.4;
+    }
+
+    // Lean Body Mass (LBM) = weight * (1 - bodyFat%)
+    const lbmKg = weightKg * (1 - (bodyFatPercent / 100));
+
+    // Mifflin-St Jeor BMR for women: 10*weightKg + 6.25*heightCm - 5*age -161
+    const bmr = 10 * weightKg + 6.25 * heightCm - 5 * age - 161;
+
+    // Total calories estimation (BMR * activity factor)
+    const totalCalories = bmr * activityFactor;
+
+    // Protein grams based on proteinGoalPercent of total calories (protein = 4 calories per gram)
+    let proteinGrams = (totalCalories * proteinGoalPercent) / 4;
+
+    // Ensure minimum protein based on LBM (1g per kg LBM, can adjust if you want)
+    if (proteinGrams < lbmKg) proteinGrams = lbmKg;
+
+    // Convert protein grams to ounces
+    const proteinOunces = proteinGrams / 28.35;
+
+    // Prepare encouraging & sassy messages
+    const encouragements = [
+      "You’re owning this midlife magic! 💪",
+      "Protein power! Keep rocking those gains! 🔥",
+      "Strong, smart, and totally in control — just like you! 💃",
+      "Protein goal locked and loaded. Let’s crush it! 🚀",
+      "Midlife muscle master—yes, that’s you! 🏆",
+      "Serving up strength with a side of sass! 😘"
+    ];
+    // Random encouragement
+    const encouragement = encouragements[Math.floor(Math.random() * encouragements.length)];
+
+    // Build result HTML with tooltip
+    const resultDiv = document.getElementById('result');
+    resultDiv.innerHTML = `
+      <p><strong>Your personalized protein target:</strong></p>
+      <p>${proteinGrams.toFixed(1)} grams <span class="tooltip" aria-label="Protein in ounces">(≈ ${proteinOunces.toFixed(2)} oz)</span> per day.</p>
+      <p><strong>Lean Body Mass:</strong> ${lbmKg.toFixed(1)} kg</p>
+      <p><strong>BMI:</strong> ${bmi.toFixed(1)}</p>
+      <p class="example-note">Example: A 4-ounce chicken breast and a 4-ounce steak combined will help you hit this goal.</p>
+      <p style="margin-top:1.2rem; font-weight:700; color:#d65a3c;">${encouragement}</p>
+    `;
+    resultDiv.style.display = 'block';
+  });
+</script>
+</body>
+</html>
