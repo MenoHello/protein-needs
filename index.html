@@ -94,7 +94,7 @@
   <div class="calculator-container" role="region" aria-labelledby="calc-title">
     <h2 id="calc-title">MenoHello Protein Calculator</h2>
     <form id="proteinForm" aria-describedby="form-instructions">
-      <p id="form-instructions">Enter your details below to get your personalized protein needs.</p>
+      <p id="form-instructions">This calculator estimates your personalized protein needs in protein grams + ounces, as well as your Body Mass Index (BMI), and your Lean Body Mass (LBM).</p>
       
       <label for="age">Age (years)</label>
       <input type="number" id="age" name="age" min="35" max="80" placeholder="e.g., 52" required />
@@ -193,12 +193,12 @@
 
     // Prepare encouraging & sassy messages
     const encouragements = [
-      "You’re owning this midlife magic! 💪",
-      "Protein power! Keep rocking those gains! 🔥",
-      "Strong, smart, and totally in control — just like you! 💃",
-      "Protein goal locked and loaded. Let’s crush it! 🚀",
-      "Midlife muscle master—yes, that’s you! 🏆",
-      "Serving up strength with a side of sass! 😘"
+      "You're not just aging, you're leveling up. Keep that health game strong!",
+      "Protein power! Keep rocking those gains!",
+      "Hot flashes? More like power surges. Keep fueling that amazing body!",
+      "This isn't a pause, it's a recalibration. And you're acing the health upgrade!",
+      "Some call it menopause, you call it your prime. Keep crushing those health goals!",
+      "Still got it, always had it. And your health habits are proving it!"
     ];
     // Random encouragement
     const encouragement = encouragements[Math.floor(Math.random() * encouragements.length)];
@@ -210,7 +210,6 @@
       <p>${proteinGrams.toFixed(1)} grams <span class="tooltip" aria-label="Protein in ounces">(≈ ${proteinOunces.toFixed(2)} oz)</span> per day.</p>
       <p><strong>Lean Body Mass:</strong> ${lbmKg.toFixed(1)} kg</p>
       <p><strong>BMI:</strong> ${bmi.toFixed(1)}</p>
-      <p class="example-note">Example: A 4-ounce chicken breast and a 4-ounce steak combined will help you hit this goal.</p>
       <p style="margin-top:1.2rem; font-weight:700; color:#d65a3c;">${encouragement}</p>
     `;
     resultDiv.style.display = 'block';
