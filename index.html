@@ -226,22 +226,24 @@
 </script>
     </div>
 <script>
-    function sendIframeHeight() {
-        const contentContainer = document.getElementById('protein-needsContainer');
-        if (contentContainer) {
-            const height = contentContainer.scrollHeight + 50; // extra buffer to avoid scrollbar
+   function sendIframeHeight() {
+    // Measure the full document height, not just a container
+    const height = document.documentElement.scrollHeight + 20; 
             window.parent.postMessage({ type: 'setIframeHeight', height: height }, 'https://www.menohello.com');
         }
     }
     window.addEventListener('DOMContentLoaded', sendIframeHeight);
     window.addEventListener('load', sendIframeHeight);
+  window.addEventListener('resize', sendIframeHeight);
     const containerToObserve = document.getElementById('protein-needsContainer'); 
     if (containerToObserve) {
         const resizeObserver = new ResizeObserver(sendIframeHeight);
         resizeObserver.observe(containerToObserve);
+      resizeObserver.observe(document.body);
     }
 </script>
 </body>
 </html>
+
 
 
