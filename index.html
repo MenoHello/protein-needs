@@ -100,6 +100,7 @@
 </style>
 </head>
 <body>
+  <div id="protein-needsContainer">
   <div class="calculator-container" role="region" aria-labelledby="calc-title">
     <h2 id="calc-title">MenoHello Protein Calculator</h2>
     <form id="proteinForm" aria-describedby="form-instructions">
@@ -224,5 +225,23 @@
     resultDiv.style.display = 'block';
   });
 </script>
+    </div>
+<script>
+    function sendIframeHeight() {
+        const contentContainer = document.getElementById('protein-needsContainer');
+        if (contentContainer) {
+            const height = contentContainer.scrollHeight + 50; // extra buffer to avoid scrollbar
+            window.parent.postMessage({ type: 'setIframeHeight', height: height }, 'https://www.menohello.com');
+        }
+    }
+    window.addEventListener('DOMContentLoaded', sendIframeHeight);
+    window.addEventListener('load', sendIframeHeight);
+    const containerToObserve = document.getElementById('protein-needsContainer'); 
+    if (containerToObserve) {
+        const resizeObserver = new ResizeObserver(sendIframeHeight);
+        resizeObserver.observe(containerToObserve);
+    }
+</script>
 </body>
 </html>
+
